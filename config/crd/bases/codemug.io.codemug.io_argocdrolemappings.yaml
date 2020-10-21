@@ -1,0 +1,88 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: argocdrolemappings.codemug.io.codemug.io
+spec:
+  group: codemug.io.codemug.io
+  names:
+    kind: ArgoCdRoleMapping
+    listKind: ArgoCdRoleMappingList
+    plural: argocdrolemappings
+    singular: argocdrolemapping
+  scope: Namespaced
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: ArgoCdRoleMapping is the Schema for the argocdrolemappings API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: ArgoCdRoleMappingSpec defines the desired state of ArgoCdRoleMapping
+          properties:
+            roles:
+              items:
+                properties:
+                  name:
+                    description: The name of the role
+                    type: string
+                  permissions:
+                    items:
+                      properties:
+                        action:
+                          description: The action that is being permitted on the specified
+                            resource. This can be one of (get, create, update, delete,
+                            sync, override, action, or * for all)
+                          type: string
+                        instance:
+                          description: If the permission is to be applied to a specific
+                            instance of the resource type, the name of that instance
+                            is specified here. If this is not specified, the permission
+                            is applied to all instances of the resource type
+                          type: string
+                        resource:
+                          description: The type of resource on which the permission
+                            is to be defined. This can be one of (clusters, projects,
+                            applications, repositories, certificates, or * for all)
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              type: array
+          type: object
+        status:
+          description: ArgoCdRoleMappingStatus defines the observed state of ArgoCdRoleMapping
+          properties:
+            details:
+              type: string
+            status:
+              type: string
+          type: object
+      type: object
+  version: v1beta1
+  versions:
+  - name: v1beta1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

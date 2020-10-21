@@ -1,0 +1,7 @@
+apiVersion: codemug.io.codemug.io/v1beta1
+kind: ArgoCdGroupMapping
+metadata:
+  name: argocdgroupmapping-sample
+spec:
+  # Add fields here
+  foo: bar

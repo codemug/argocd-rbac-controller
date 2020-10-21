@@ -1,0 +1,24 @@
+# permissions for end users to edit argocdgroupmappings.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: argocdgroupmapping-editor-role
+rules:
+- apiGroups:
+  - codemug.io.codemug.io
+  resources:
+  - argocdgroupmappings
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - codemug.io.codemug.io
+  resources:
+  - argocdgroupmappings/status
+  verbs:
+  - get
