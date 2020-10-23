@@ -39,6 +39,7 @@ var ACTIONS = map[string]bool{
 	"sync":     true,
 	"override": true,
 	"action":   true,
+	"*":        true,
 }
 
 type RbacManager struct {
@@ -104,13 +105,20 @@ func (r *RbacManager) getPermissions(mapping *v1beta1.RoleSpec) (map[string]bool
 		if _, ok := RESOURCES[v.Resource]; !ok {
 			return nil, errors.New(fmt.Sprintf("invalid resource specified %s", v.Resource))
 		}
-		if _, ok := ACTIONS[v.Action]; !ok {
-			return nil, errors.New(fmt.Sprintf("invalid action specified %s", v.Action))
-		}
 		if v.Instance == "" {
-			v.Instance = "*"
+			if v.Resource == "applications" {
+				v.Instance = "*/*"
+			} else {
+				v.Instance = "*"
+			}
 		}
-		permissions[fmt.Sprintf(PERMISSION_FORMAT, mapping.Name, v.Resource, v.Action, v.Instance)] = true
+		for _, action := range v.Actions {
+			if _, ok := ACTIONS[action]; !ok {
+				return nil, errors.New(fmt.Sprintf("invalid action specified %s", v.Actions))
+			}
+			permissions[fmt.Sprintf(PERMISSION_FORMAT, mapping.Name, v.Resource, action, v.Instance)] = true
+		}
+
 	}
 	return permissions, nil
 }

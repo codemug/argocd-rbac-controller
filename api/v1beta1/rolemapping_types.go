@@ -31,10 +31,10 @@ type PermissionSpec struct {
 	// This can be one of (clusters, projects, applications,
 	// repositories, certificates, or * for all)
 	Resource string `json:"resource,omitempty"`
-	// The action that is being permitted on the specified resource.
+	// The actions that are being permitted on the specified resource.
 	// This can be one of (get, create, update, delete, sync,
 	// override, action, or * for all)
-	Action string `json:"action,omitempty"`
+	Actions []string `json:"actions,omitempty"`
 	// If the permission is to be applied to a specific instance of
 	// the resource type, the name of that instance is specified here.
 	// If this is not specified, the permission is applied to all

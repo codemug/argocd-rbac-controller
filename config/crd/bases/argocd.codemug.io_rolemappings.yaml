@@ -46,11 +46,13 @@ spec:
                   permissions:
                     items:
                       properties:
-                        action:
-                          description: The action that is being permitted on the specified
-                            resource. This can be one of (get, create, update, delete,
-                            sync, override, action, or * for all)
-                          type: string
+                        actions:
+                          description: The actions that are being permitted on the
+                            specified resource. This can be one of (get, create, update,
+                            delete, sync, override, action, or * for all)
+                          items:
+                            type: string
+                          type: array
                         instance:
                           description: If the permission is to be applied to a specific
                             instance of the resource type, the name of that instance
