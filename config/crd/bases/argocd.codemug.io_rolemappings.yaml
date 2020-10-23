@@ -6,20 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
-  name: argocdrolemappings.codemug.io.codemug.io
+  name: rolemappings.argocd.codemug.io
 spec:
-  group: codemug.io.codemug.io
+  group: argocd.codemug.io
   names:
-    kind: ArgoCdRoleMapping
-    listKind: ArgoCdRoleMappingList
-    plural: argocdrolemappings
-    singular: argocdrolemapping
+    kind: RoleMapping
+    listKind: RoleMappingList
+    plural: rolemappings
+    singular: rolemapping
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: ArgoCdRoleMapping is the Schema for the argocdrolemappings API
+      description: RoleMapping is the Schema for the rolemappings API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -34,9 +34,10 @@ spec:
         metadata:
           type: object
         spec:
-          description: ArgoCdRoleMappingSpec defines the desired state of ArgoCdRoleMapping
+          description: RoleMappingSpec defines the desired state of RoleMapping
           properties:
             roles:
+              description: Roles to permissions mapping specification
               items:
                 properties:
                   name:
@@ -67,7 +68,7 @@ spec:
               type: array
           type: object
         status:
-          description: ArgoCdRoleMappingStatus defines the observed state of ArgoCdRoleMapping
+          description: RoleMappingStatus defines the observed state of RoleMapping
           properties:
             details:
               type: string

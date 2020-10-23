@@ -1,13 +1,13 @@
-# permissions for end users to edit argocdrolemappings.
+# permissions for end users to edit groupmappings.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: argocdrolemapping-editor-role
+  name: groupmapping-editor-role
 rules:
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdrolemappings
+  - groupmappings
   verbs:
   - create
   - delete
@@ -17,8 +17,8 @@ rules:
   - update
   - watch
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdrolemappings/status
+  - groupmappings/status
   verbs:
   - get

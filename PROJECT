@@ -3,11 +3,11 @@ layout: go.kubebuilder.io/v2
 projectName: argocd-rbac-controller
 repo: github.com/codemug/argocd-rbac-controller
 resources:
-- group: codemug.io
-  kind: ArgoCdGroupMapping
+- group: argocd
+  kind: GroupMapping
   version: v1beta1
-- group: codemug.io
-  kind: ArgoCdRoleMapping
+- group: argocd
+  kind: RoleMapping
   version: v1beta1
 version: 3-alpha
 plugins:

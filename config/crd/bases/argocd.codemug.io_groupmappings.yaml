@@ -6,20 +6,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
-  name: argocdgroupmappings.codemug.io.codemug.io
+  name: groupmappings.argocd.codemug.io
 spec:
-  group: codemug.io.codemug.io
+  group: argocd.codemug.io
   names:
-    kind: ArgoCdGroupMapping
-    listKind: ArgoCdGroupMappingList
-    plural: argocdgroupmappings
-    singular: argocdgroupmapping
+    kind: GroupMapping
+    listKind: GroupMappingList
+    plural: groupmappings
+    singular: groupmapping
   scope: Namespaced
   subresources:
     status: {}
   validation:
     openAPIV3Schema:
-      description: ArgoCdGroupMapping is the Schema for the argocdgroupmappings API
+      description: GroupMapping is the Schema for the groupmappings API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -34,7 +34,7 @@ spec:
         metadata:
           type: object
         spec:
-          description: ArgoCdGroupMappingSpec defines the desired state of ArgoCdGroupMapping
+          description: GroupMappingSpec defines the desired state of GroupMapping
           properties:
             mappings:
               items:
@@ -49,7 +49,7 @@ spec:
               type: array
           type: object
         status:
-          description: ArgoCdGroupMappingStatus defines the observed state of ArgoCdGroupMapping
+          description: GroupMappingStatus defines the observed state of GroupMapping
           properties:
             details:
               type: string

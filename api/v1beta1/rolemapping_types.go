@@ -20,9 +20,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
-// ArgoCdRoleMappingSpec defines the desired state of ArgoCdRoleMapping
-type ArgoCdRoleMappingSpec struct {
+// RoleMappingSpec defines the desired state of RoleMapping
+type RoleMappingSpec struct {
+	// Roles to permissions mapping specification
 	Roles []RoleSpec `json:"roles,omitempty"`
 }
 
@@ -34,7 +34,7 @@ type PermissionSpec struct {
 	// The action that is being permitted on the specified resource.
 	// This can be one of (get, create, update, delete, sync,
 	// override, action, or * for all)
-	Action   string `json:"action,omitempty"`
+	Action string `json:"action,omitempty"`
 	// If the permission is to be applied to a specific instance of
 	// the resource type, the name of that instance is specified here.
 	// If this is not specified, the permission is applied to all
@@ -45,13 +45,13 @@ type PermissionSpec struct {
 
 type RoleSpec struct {
 	// The name of the role
-	Name        string           `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 	// +kubebuilder:validation:Optional
 	Permissions []PermissionSpec `json:"permissions,omitempty"`
 }
 
-// ArgoCdRoleMappingStatus defines the observed state of ArgoCdRoleMapping
-type ArgoCdRoleMappingStatus struct {
+// RoleMappingStatus defines the observed state of RoleMapping
+type RoleMappingStatus struct {
 	Status  Status `json:"status,omitempty"`
 	Details string `json:"details,omitempty"`
 }
@@ -59,24 +59,24 @@ type ArgoCdRoleMappingStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// ArgoCdRoleMapping is the Schema for the argocdrolemappings API
-type ArgoCdRoleMapping struct {
+// RoleMapping is the Schema for the rolemappings API
+type RoleMapping struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ArgoCdRoleMappingSpec   `json:"spec,omitempty"`
-	Status ArgoCdRoleMappingStatus `json:"status,omitempty"`
+	Spec   RoleMappingSpec   `json:"spec,omitempty"`
+	Status RoleMappingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// ArgoCdRoleMappingList contains a list of ArgoCdRoleMapping
-type ArgoCdRoleMappingList struct {
+// RoleMappingList contains a list of RoleMapping
+type RoleMappingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ArgoCdRoleMapping `json:"items"`
+	Items           []RoleMapping `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&ArgoCdRoleMapping{}, &ArgoCdRoleMappingList{})
+	SchemeBuilder.Register(&RoleMapping{}, &RoleMappingList{})
 }

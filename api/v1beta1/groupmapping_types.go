@@ -27,21 +27,20 @@ const (
 	FAILURE Status = "Failure"
 )
 
-
-// ArgoCdGroupMappingSpec defines the desired state of ArgoCdGroupMapping
-type ArgoCdGroupMappingSpec struct {
-	Mappings []GroupMappingSpec `json:"mappings,omitempty,omitempty"`
+// GroupMappingSpec defines the desired state of GroupMapping
+type GroupMappingSpec struct {
+	Mappings []MappingSpec `json:"mappings,omitempty,omitempty"`
 }
 
-type GroupMappingSpec struct {
+type MappingSpec struct {
 	// The name of the group to be created
 	GroupName string `json:"groupName,omitempty"`
 	// The name of the role to map this group on
-	RoleName  string `json:"roleName,omitempty"`
+	RoleName string `json:"roleName,omitempty"`
 }
 
-// ArgoCdGroupMappingStatus defines the observed state of ArgoCdGroupMapping
-type ArgoCdGroupMappingStatus struct {
+// GroupMappingStatus defines the observed state of GroupMapping
+type GroupMappingStatus struct {
 	Status  Status `json:"status,omitempty"`
 	Details string `json:"details,omitempty"`
 }
@@ -49,24 +48,24 @@ type ArgoCdGroupMappingStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 
-// ArgoCdGroupMapping is the Schema for the argocdgroupmappings API
-type ArgoCdGroupMapping struct {
+// GroupMapping is the Schema for the groupmappings API
+type GroupMapping struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   ArgoCdGroupMappingSpec   `json:"spec,omitempty"`
-	Status ArgoCdGroupMappingStatus `json:"status,omitempty"`
+	Spec   GroupMappingSpec   `json:"spec,omitempty"`
+	Status GroupMappingStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 
-// ArgoCdGroupMappingList contains a list of ArgoCdGroupMapping
-type ArgoCdGroupMappingList struct {
+// GroupMappingList contains a list of GroupMapping
+type GroupMappingList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ArgoCdGroupMapping `json:"items"`
+	Items           []GroupMapping `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&ArgoCdGroupMapping{}, &ArgoCdGroupMappingList{})
+	SchemeBuilder.Register(&GroupMapping{}, &GroupMappingList{})
 }

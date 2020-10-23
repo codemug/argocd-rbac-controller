@@ -28,7 +28,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	codemugiov1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
+	argocdv1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
 	"github.com/codemug/argocd-rbac-controller/controllers"
 	// +kubebuilder:scaffold:imports
 )
@@ -41,7 +41,7 @@ var (
 func init() {
 	utilruntime.Must(clientgoscheme.AddToScheme(scheme))
 
-	utilruntime.Must(codemugiov1beta1.AddToScheme(scheme))
+	utilruntime.Must(argocdv1beta1.AddToScheme(scheme))
 	// +kubebuilder:scaffold:scheme
 }
 
@@ -69,6 +69,10 @@ func main() {
 		LeaderElection:     enableLeaderElection,
 		LeaderElectionID:   "218948db.codemug.io",
 	})
+	if err != nil {
+		setupLog.Error(err, "unable to start manager")
+		os.Exit(1)
+	}
 
 	rbacManager := core.NewRbacManager(mgr.GetClient(), configMapName, configMapNamespace, defaultPolicy)
 	if err != nil {
@@ -76,22 +80,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.ArgoCdGroupMappingReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("ArgoCdGroupMapping"),
-		Scheme: mgr.GetScheme(),
+	if err = (&controllers.GroupMappingReconciler{
+		Client:      mgr.GetClient(),
+		Log:         ctrl.Log.WithName("controllers").WithName("GroupMapping"),
+		Scheme:      mgr.GetScheme(),
 		RbacManager: &rbacManager,
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "ArgoCdGroupMapping")
+		setupLog.Error(err, "unable to create controller", "controller", "GroupMapping")
 		os.Exit(1)
 	}
-	if err = (&controllers.ArgoCdRoleMappingReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("ArgoCdRoleMapping"),
-		Scheme: mgr.GetScheme(),
+	if err = (&controllers.RoleMappingReconciler{
+		Client:      mgr.GetClient(),
+		Log:         ctrl.Log.WithName("controllers").WithName("RoleMapping"),
+		Scheme:      mgr.GetScheme(),
 		RbacManager: &rbacManager,
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "ArgoCdRoleMapping")
+		setupLog.Error(err, "unable to create controller", "controller", "RoleMapping")
 		os.Exit(1)
 	}
 	// +kubebuilder:scaffold:builder

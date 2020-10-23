@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	codemugiov1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
+	argocdv1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -62,10 +62,10 @@ var _ = BeforeSuite(func(done Done) {
 	Expect(err).ToNot(HaveOccurred())
 	Expect(cfg).ToNot(BeNil())
 
-	err = codemugiov1beta1.AddToScheme(scheme.Scheme)
+	err = argocdv1beta1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
-	err = codemugiov1beta1.AddToScheme(scheme.Scheme)
+	err = argocdv1beta1.AddToScheme(scheme.Scheme)
 	Expect(err).NotTo(HaveOccurred())
 
 	// +kubebuilder:scaffold:scheme

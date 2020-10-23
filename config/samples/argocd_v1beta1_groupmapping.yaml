@@ -1,0 +1,7 @@
+apiVersion: argocd.codemug.io/v1beta1
+kind: GroupMapping
+metadata:
+  name: groupmapping-sample
+spec:
+  # Add fields here
+  foo: bar

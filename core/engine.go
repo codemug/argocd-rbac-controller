@@ -60,7 +60,7 @@ func NewRbacManager(client client.Client, configMapName string, configMapNamespa
 	return RbacManager{client: client, configMap: &cm, defaultPolicy: defaultPolicy, rules: make(map[string]map[string]bool)}
 }
 
-func (r *RbacManager) ApplyGroupMapping(mapping *v1beta1.ArgoCdGroupMapping) {
+func (r *RbacManager) ApplyGroupMapping(mapping *v1beta1.GroupMapping) {
 	groupRules := make(map[string]bool)
 	for _, v := range mapping.Spec.Mappings {
 		rule := fmt.Sprintf(GROUP_FORMAT, v.GroupName, v.RoleName)
@@ -80,7 +80,7 @@ func (r *RbacManager) ClearMapping(typeMeta *v12.TypeMeta, objectMeta *v12.Objec
 	}
 }
 
-func (r *RbacManager) ApplyRoleMapping(mapping *v1beta1.ArgoCdRoleMapping) error {
+func (r *RbacManager) ApplyRoleMapping(mapping *v1beta1.RoleMapping) error {
 	allPermissions := make(map[string]bool)
 	for _, v := range mapping.Spec.Roles {
 		permissions, err := r.getPermissions(&v)

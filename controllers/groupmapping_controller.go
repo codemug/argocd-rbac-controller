@@ -27,30 +27,34 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	codemugiov1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
+	argocdv1beta1 "github.com/codemug/argocd-rbac-controller/api/v1beta1"
 )
 
-// ArgoCdRoleMappingReconciler reconciles a ArgoCdRoleMapping object
-type ArgoCdRoleMappingReconciler struct {
+const (
+	SUCCESS = "Success"
+)
+
+// GroupMappingReconciler reconciles a GroupMapping object
+type GroupMappingReconciler struct {
 	client.Client
-	Log         logr.Logger
-	Scheme      *runtime.Scheme
+	Log    logr.Logger
+	Scheme *runtime.Scheme
 	RbacManager *core.RbacManager
 }
 
-// +kubebuilder:rbac:groups=codemug.io.codemug.io,resources=argocdrolemappings,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=codemug.io.codemug.io,resources=argocdrolemappings/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=argocd.codemug.io,resources=groupmappings,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=argocd.codemug.io,resources=groupmappings/status,verbs=get;update;patch
 
-func (r *ArgoCdRoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
+func (r *GroupMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	log := r.Log.WithValues("argocdgroupmapping", req.NamespacedName)
-	log.Info("Reconciling ArgoCdRoleMapping")
+	log.Info("Reconciling ArgoCdGroupMapping")
 
-	instance := &codemugiov1beta1.ArgoCdRoleMapping{}
+	instance := &argocdv1beta1.GroupMapping{}
 	err := r.Client.Get(ctx, req.NamespacedName, instance)
 	if err != nil {
 		if errors.IsNotFound(err) {
-			log.Info("ArgoCdRoleMapping removed, clearing its rules")
+			log.Info("ArgoCdGroupMapping removed, clearing its rules")
 			r.RbacManager.ClearMapping(&instance.TypeMeta, &ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
 			err := r.RbacManager.Commit(false)
 			if err != nil {
@@ -60,17 +64,13 @@ func (r *ArgoCdRoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, 
 			log.Info("Reconcile complete")
 			return reconcile.Result{}, nil
 		}
-		log.Error(err, "Could not fetch ArgoCdRoleMapping resource")
+		log.Error(err, "Could not fetch ArgoCdGroupMapping resource")
 		return reconcile.Result{}, err
 	}
 
 	if instance.Status.Status == "" {
 		log.Info("Resource created or updated, applying its rules")
-		err = r.RbacManager.ApplyRoleMapping(instance)
-		if err != nil {
-			log.Error(err, "Could not apply ArgoCdRoleMapping")
-			return ctrl.Result{}, err
-		}
+		r.RbacManager.ApplyGroupMapping(instance)
 		err = r.RbacManager.Commit(false)
 		if err != nil {
 			log.Error(err, "Could not save changes")
@@ -86,7 +86,7 @@ func (r *ArgoCdRoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, 
 	return ctrl.Result{}, nil
 }
 
-func (r *ArgoCdRoleMappingReconciler) setStatus(ctx context.Context, mapping *codemugiov1beta1.ArgoCdRoleMapping, status codemugiov1beta1.Status, details string) error {
+func (r *GroupMappingReconciler) setStatus(ctx context.Context, mapping *argocdv1beta1.GroupMapping, status argocdv1beta1.Status, details string) error {
 	if mapping.Status.Status != status || mapping.Status.Details != details {
 		mapping.Status.Status = status
 		mapping.Status.Details = details
@@ -95,8 +95,8 @@ func (r *ArgoCdRoleMappingReconciler) setStatus(ctx context.Context, mapping *co
 	return nil
 }
 
-func (r *ArgoCdRoleMappingReconciler) SetupWithManager(mgr ctrl.Manager) error {
+func (r *GroupMappingReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
-		For(&codemugiov1beta1.ArgoCdRoleMapping{}).
+		For(&argocdv1beta1.GroupMapping{}).
 		Complete(r)
 }

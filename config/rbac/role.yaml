@@ -7,9 +7,9 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdgroupmappings
+  - groupmappings
   verbs:
   - create
   - delete
@@ -19,17 +19,17 @@ rules:
   - update
   - watch
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdgroupmappings/status
+  - groupmappings/status
   verbs:
   - get
   - patch
   - update
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdrolemappings
+  - rolemappings
   verbs:
   - create
   - delete
@@ -39,9 +39,9 @@ rules:
   - update
   - watch
 - apiGroups:
-  - codemug.io.codemug.io
+  - argocd.codemug.io
   resources:
-  - argocdrolemappings/status
+  - rolemappings/status
   verbs:
   - get
   - patch
