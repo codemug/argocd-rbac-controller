@@ -51,7 +51,7 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("ArgoCdRoleMapping removed, clearing its rules")
-			r.RbacManager.ClearMapping(&instance.TypeMeta, &ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
+			r.RbacManager.ClearRoleMapping(&ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
 			err := r.RbacManager.Commit(false)
 			if err != nil {
 				log.Error(err, "Could not save changes")
@@ -64,13 +64,13 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 		return reconcile.Result{}, err
 	}
 
-	if instance.Status.Status == "" {
-		log.Info("Resource created or updated, applying its rules")
-		err = r.RbacManager.ApplyRoleMapping(instance)
-		if err != nil {
-			log.Error(err, "Could not apply ArgoCdRoleMapping")
-			return ctrl.Result{}, err
-		}
+	log.Info("Resource created or updated, applying its rules")
+	err = r.RbacManager.ApplyRoleMapping(instance)
+	if err != nil {
+		log.Error(err, "Could not apply ArgoCdRoleMapping")
+		return ctrl.Result{}, err
+	}
+	if r.RbacManager.IsDirty() {
 		err = r.RbacManager.Commit(false)
 		if err != nil {
 			log.Error(err, "Could not save changes")
@@ -82,6 +82,7 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 			return reconcile.Result{}, err
 		}
 	}
+
 	log.Info("Reconcile complete")
 	return ctrl.Result{}, nil
 }

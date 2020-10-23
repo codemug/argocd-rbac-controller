@@ -9,6 +9,7 @@ import (
 	errors2 "k8s.io/apimachinery/pkg/api/errors"
 	v12 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
+	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strings"
 )
@@ -20,6 +21,8 @@ const (
 	DEFAULT_CONFIGMAP_NAMESPACE = "argocd"
 	DEFAULT_POLICY_KEY          = "policy.default"
 	DEFAULT_RBAC_KEY            = "policy.csv"
+	GROUP_TYPE                  = "groups"
+	ROLE_TYPE                   = "roles"
 )
 
 var RESOURCES = map[string]bool{
@@ -68,17 +71,31 @@ func (r *RbacManager) ApplyGroupMapping(mapping *v1beta1.GroupMapping) {
 		groupRules[rule] = true
 	}
 	if len(groupRules) > 0 {
-		r.rules[GetTypedNamespacedName(&mapping.TypeMeta, &mapping.ObjectMeta)] = groupRules
+		id := GetTypedNamespacedName(GROUP_TYPE, &mapping.ObjectMeta)
+		if existing, ok := r.rules[id]; ok {
+			if reflect.DeepEqual(groupRules, existing) {
+				return
+			}
+		}
+		r.rules[id] = groupRules
 		r.dirty = true
 	}
 }
 
-func (r *RbacManager) ClearMapping(typeMeta *v12.TypeMeta, objectMeta *v12.ObjectMeta) {
-	namespacedName := GetTypedNamespacedName(typeMeta, objectMeta)
+func (r *RbacManager) clearMapping(resourceType string, objectMeta *v12.ObjectMeta) {
+	namespacedName := GetTypedNamespacedName(resourceType, objectMeta)
 	if _, ok := r.rules[namespacedName]; ok {
 		delete(r.rules, namespacedName)
 		r.dirty = true
 	}
+}
+
+func (r *RbacManager) ClearGroupMapping(objectMeta *v12.ObjectMeta) {
+	r.clearMapping(GROUP_TYPE, objectMeta)
+}
+
+func (r *RbacManager) ClearRoleMapping(objectMeta *v12.ObjectMeta) {
+	r.clearMapping(ROLE_TYPE, objectMeta)
 }
 
 func (r *RbacManager) ApplyRoleMapping(mapping *v1beta1.RoleMapping) error {
@@ -93,7 +110,13 @@ func (r *RbacManager) ApplyRoleMapping(mapping *v1beta1.RoleMapping) error {
 		}
 	}
 	if len(allPermissions) > 0 {
-		r.rules[GetTypedNamespacedName(&mapping.TypeMeta, &mapping.ObjectMeta)] = allPermissions
+		id := GetTypedNamespacedName(ROLE_TYPE, &mapping.ObjectMeta)
+		if existing, ok := r.rules[id]; ok {
+			if reflect.DeepEqual(existing, allPermissions) {
+				return nil
+			}
+		}
+		r.rules[id] = allPermissions
 		r.dirty = true
 	}
 	return nil
@@ -139,6 +162,10 @@ func (r *RbacManager) getFullRbac() string {
 	return strings.Join(keys, "\n")
 }
 
+func (r *RbacManager) IsDirty() bool {
+	return r.dirty
+}
+
 func (r *RbacManager) Commit(force bool) error {
 	if r.dirty || force {
 		configMapContents := make(map[string]string)
@@ -168,6 +195,6 @@ func (r *RbacManager) Commit(force bool) error {
 	return nil
 }
 
-func GetTypedNamespacedName(typeMeta *v12.TypeMeta, objectMeta *v12.ObjectMeta) string {
-	return fmt.Sprintf("%s/%s/%s", typeMeta.Kind, objectMeta.Namespace, objectMeta.Name)
+func GetTypedNamespacedName(resourceType string, objectMeta *v12.ObjectMeta) string {
+	return fmt.Sprintf("%s/%s/%s", resourceType, objectMeta.Namespace, objectMeta.Name)
 }

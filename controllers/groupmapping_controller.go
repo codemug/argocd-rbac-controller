@@ -37,8 +37,8 @@ const (
 // GroupMappingReconciler reconciles a GroupMapping object
 type GroupMappingReconciler struct {
 	client.Client
-	Log    logr.Logger
-	Scheme *runtime.Scheme
+	Log         logr.Logger
+	Scheme      *runtime.Scheme
 	RbacManager *core.RbacManager
 }
 
@@ -55,7 +55,7 @@ func (r *GroupMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 	if err != nil {
 		if errors.IsNotFound(err) {
 			log.Info("ArgoCdGroupMapping removed, clearing its rules")
-			r.RbacManager.ClearMapping(&instance.TypeMeta, &ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
+			r.RbacManager.ClearGroupMapping(&ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
 			err := r.RbacManager.Commit(false)
 			if err != nil {
 				log.Error(err, "Could not save changes")
@@ -68,9 +68,9 @@ func (r *GroupMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 		return reconcile.Result{}, err
 	}
 
-	if instance.Status.Status == "" {
-		log.Info("Resource created or updated, applying its rules")
-		r.RbacManager.ApplyGroupMapping(instance)
+	log.Info("Resource created or updated, applying its rules")
+	r.RbacManager.ApplyGroupMapping(instance)
+	if r.RbacManager.IsDirty() {
 		err = r.RbacManager.Commit(false)
 		if err != nil {
 			log.Error(err, "Could not save changes")
@@ -82,6 +82,7 @@ func (r *GroupMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error
 			return reconcile.Result{}, err
 		}
 	}
+
 	log.Info("Reconcile complete")
 	return ctrl.Result{}, nil
 }
