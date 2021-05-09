@@ -1,9 +1,0 @@
-apiVersion: argocd.codemug.io/v1beta1
-kind: GroupMapping
-metadata:
-  name: test-group
-  namespace: default
-spec:
-  mappings:
-  - groupName: tester
-    roleName: tester

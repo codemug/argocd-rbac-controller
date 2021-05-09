@@ -1,5 +1,5 @@
 /*
-
+Copyright 2021.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,6 +18,13 @@ package v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
+
+type Status string
+
+const (
+	SUCCESS Status = "Success"
+	FAILURE Status = "Failure"
 )
 
 // RoleMappingSpec defines the desired state of RoleMapping
@@ -56,8 +63,8 @@ type RoleMappingStatus struct {
 	Details string `json:"details,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
 
 // RoleMapping is the Schema for the rolemappings API
 type RoleMapping struct {
@@ -68,7 +75,7 @@ type RoleMapping struct {
 	Status RoleMappingStatus `json:"status,omitempty"`
 }
 
-// +kubebuilder:object:root=true
+//+kubebuilder:object:root=true
 
 // RoleMappingList contains a list of RoleMapping
 type RoleMappingList struct {

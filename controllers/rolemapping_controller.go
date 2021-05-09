@@ -1,5 +1,5 @@
 /*
-
+Copyright 2021.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -38,11 +38,10 @@ type RoleMappingReconciler struct {
 	RbacManager *core.RbacManager
 }
 
-// +kubebuilder:rbac:groups=argocd.codemug.io,resources=rolemappings,verbs=get;list;watch;create;update;patch;delete
-// +kubebuilder:rbac:groups=argocd.codemug.io,resources=rolemappings/status,verbs=get;update;patch
-
-func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
-	ctx := context.Background()
+//+kubebuilder:rbac:groups=argocd.codemug.io,resources=rolemappings,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=argocd.codemug.io,resources=rolemappings/status,verbs=get;update;patch
+//+kubebuilder:rbac:groups=argocd.codemug.io,resources=rolemappings/finalizers,verbs=update
+func (r *RoleMappingReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	log := r.Log.WithValues("argocdgroupmapping", req.NamespacedName)
 	log.Info("Reconciling ArgoCdRoleMapping")
 
@@ -54,7 +53,7 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 			r.RbacManager.ClearRoleMapping(&ctrl.ObjectMeta{Name: req.Name, Namespace: req.Namespace})
 			err := r.RbacManager.Commit(false)
 			if err != nil {
-				log.Error(err, "Could not save changes")
+				log.Error(err, "Could not save changes after removal")
 				return reconcile.Result{}, err
 			}
 			log.Info("Reconcile complete")
@@ -73,7 +72,7 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 	if r.RbacManager.IsDirty() {
 		err = r.RbacManager.Commit(false)
 		if err != nil {
-			log.Error(err, "Could not save changes")
+			log.Error(err, "Could not save changes after update")
 			return reconcile.Result{}, err
 		}
 		err = r.setStatus(ctx, instance, SUCCESS, "Group rules applied")
@@ -85,6 +84,7 @@ func (r *RoleMappingReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error)
 
 	log.Info("Reconcile complete")
 	return ctrl.Result{}, nil
+
 }
 
 func (r *RoleMappingReconciler) setStatus(ctx context.Context, mapping *argocdv1beta1.RoleMapping, status argocdv1beta1.Status, details string) error {
@@ -96,6 +96,7 @@ func (r *RoleMappingReconciler) setStatus(ctx context.Context, mapping *argocdv1
 	return nil
 }
 
+// SetupWithManager sets up the controller with the Manager.
 func (r *RoleMappingReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&argocdv1beta1.RoleMapping{}).

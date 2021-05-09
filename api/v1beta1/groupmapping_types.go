@@ -1,5 +1,5 @@
 /*
-
+Copyright 2021.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,13 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-type Status string
-
-const (
-	SUCCESS Status = "Success"
-	FAILURE Status = "Failure"
-)
-
 // GroupMappingSpec defines the desired state of GroupMapping
 type GroupMappingSpec struct {
 	Mappings []MappingSpec `json:"mappings,omitempty,omitempty"`
@@ -45,8 +38,8 @@ type GroupMappingStatus struct {
 	Details string `json:"details,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
 
 // GroupMapping is the Schema for the groupmappings API
 type GroupMapping struct {
@@ -57,7 +50,7 @@ type GroupMapping struct {
 	Status GroupMappingStatus `json:"status,omitempty"`
 }
 
-// +kubebuilder:object:root=true
+//+kubebuilder:object:root=true
 
 // GroupMappingList contains a list of GroupMapping
 type GroupMappingList struct {

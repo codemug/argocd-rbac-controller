@@ -1,10 +1,10 @@
 
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
+    controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
   name: rolemappings.argocd.codemug.io
 spec:
@@ -15,74 +15,73 @@ spec:
     plural: rolemappings
     singular: rolemapping
   scope: Namespaced
-  subresources:
-    status: {}
-  validation:
-    openAPIV3Schema:
-      description: RoleMapping is the Schema for the rolemappings API
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          type: object
-        spec:
-          description: RoleMappingSpec defines the desired state of RoleMapping
-          properties:
-            roles:
-              description: Roles to permissions mapping specification
-              items:
-                properties:
-                  name:
-                    description: The name of the role
-                    type: string
-                  permissions:
-                    items:
-                      properties:
-                        actions:
-                          description: The actions that are being permitted on the
-                            specified resource. This can be one of (get, create, update,
-                            delete, sync, override, action, or * for all)
-                          items:
-                            type: string
-                          type: array
-                        instance:
-                          description: If the permission is to be applied to a specific
-                            instance of the resource type, the name of that instance
-                            is specified here. If this is not specified, the permission
-                            is applied to all instances of the resource type
-                          type: string
-                        resource:
-                          description: The type of resource on which the permission
-                            is to be defined. This can be one of (clusters, projects,
-                            applications, repositories, certificates, or * for all)
-                          type: string
-                      type: object
-                    type: array
-                type: object
-              type: array
-          type: object
-        status:
-          description: RoleMappingStatus defines the observed state of RoleMapping
-          properties:
-            details:
-              type: string
-            status:
-              type: string
-          type: object
-      type: object
-  version: v1beta1
   versions:
   - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: RoleMapping is the Schema for the rolemappings API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RoleMappingSpec defines the desired state of RoleMapping
+            properties:
+              roles:
+                description: Roles to permissions mapping specification
+                items:
+                  properties:
+                    name:
+                      description: The name of the role
+                      type: string
+                    permissions:
+                      items:
+                        properties:
+                          actions:
+                            description: The actions that are being permitted on the
+                              specified resource. This can be one of (get, create,
+                              update, delete, sync, override, action, or * for all)
+                            items:
+                              type: string
+                            type: array
+                          instance:
+                            description: If the permission is to be applied to a specific
+                              instance of the resource type, the name of that instance
+                              is specified here. If this is not specified, the permission
+                              is applied to all instances of the resource type
+                            type: string
+                          resource:
+                            description: The type of resource on which the permission
+                              is to be defined. This can be one of (clusters, projects,
+                              applications, repositories, certificates, or * for all)
+                            type: string
+                        type: object
+                      type: array
+                  type: object
+                type: array
+            type: object
+          status:
+            description: RoleMappingStatus defines the observed state of RoleMapping
+            properties:
+              details:
+                type: string
+              status:
+                type: string
+            type: object
+        type: object
     served: true
     storage: true
+    subresources:
+      status: {}
 status:
   acceptedNames:
     kind: ""
