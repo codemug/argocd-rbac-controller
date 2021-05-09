@@ -125,7 +125,7 @@ func (r *RbacManager) ApplyRoleMapping(mapping *v1beta1.RoleMapping) error {
 func (r *RbacManager) getPermissions(mapping *v1beta1.RoleSpec) (map[string]bool, error) {
 	permissions := make(map[string]bool)
 	for _, v := range mapping.Permissions {
-		if _, ok := RESOURCES[v.Resource]; !ok {
+		if _, ok := RESOURCES[strings.ToLower(v.Resource)]; !ok {
 			return nil, errors.New(fmt.Sprintf("invalid resource specified %s", v.Resource))
 		}
 		if v.Instance == "" {
@@ -136,7 +136,7 @@ func (r *RbacManager) getPermissions(mapping *v1beta1.RoleSpec) (map[string]bool
 			}
 		}
 		for _, action := range v.Actions {
-			if _, ok := ACTIONS[action]; !ok {
+			if _, ok := ACTIONS[strings.ToLower(action)]; !ok {
 				return nil, errors.New(fmt.Sprintf("invalid action specified %s", v.Actions))
 			}
 			permissions[fmt.Sprintf(PERMISSION_FORMAT, mapping.Name, v.Resource, action, v.Instance)] = true

@@ -65,6 +65,7 @@ type RoleMappingStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
+//+kubebuilder:resource:scope=Cluster
 
 // RoleMapping is the Schema for the rolemappings API
 type RoleMapping struct {

@@ -3,5 +3,10 @@ kind: RoleMapping
 metadata:
   name: rolemapping-sample
 spec:
-  # Add fields here
-  foo: bar
+  roles:
+    - name: foo
+      permissions:
+        - resource: applications
+          actions:
+          - get
+          instance: "*"
