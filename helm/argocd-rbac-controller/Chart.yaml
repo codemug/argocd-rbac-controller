@@ -1,0 +1,7 @@
+apiVersion: v2
+name: argocd-rbac-controller
+description: A Helm chart for to deploy argocd-rbac-controller
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+home:
