@@ -40,7 +40,6 @@ type GroupMappingStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-//+kubebuilder:resource:scope=Cluster
 
 // GroupMapping is the Schema for the groupmappings API
 type GroupMapping struct {

@@ -1,0 +1,11 @@
+name: test
+on: [push]
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    container: golang:1.16-stretch
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: Run tests
+        run: make test

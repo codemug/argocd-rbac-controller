@@ -14,7 +14,7 @@ spec:
     listKind: GroupMappingList
     plural: groupmappings
     singular: groupmapping
-  scope: Cluster
+  scope: Namespaced
   versions:
   - name: v1beta1
     schema:
