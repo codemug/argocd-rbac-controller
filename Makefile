@@ -6,7 +6,7 @@
 VERSION ?= 0.1.0
 
 # Image URL to use all building/pushing image targets
-REPO ?= ghcr.io/codemug
+REGISTRY ?= ghcr.io/codemug
 IMG ?= argocd-rbac-controller:$(VERSION)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true,preserveUnknownFields=false"
@@ -63,10 +63,10 @@ build: generate fmt vet ## Build manager binary.
 	go build -o bin/manager main.go
 
 docker-build: test ## Build docker image with the manager.
-	docker build -t ${REPO}/${IMG} .
+	docker build -t ${REGISTRY}/${IMG} .
 
 docker-push: ## Push docker image with the manager.
-	docker push ${REPO}/${IMG}
+	docker push ${REGISTRY}/${IMG}
 
 CONTROLLER_GEN = $(shell pwd)/bin/controller-gen
 controller-gen: ## Download controller-gen locally if necessary.

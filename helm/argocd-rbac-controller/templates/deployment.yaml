@@ -31,14 +31,14 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.registry }}/{{ .Values.image.imageName }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - "/controller"
             - "-cm-name"
             - {{ .Values.controller.rbacConfigMapName | quote }}
             - "-cm-namespace"
-            - {{ .Release.Namespace | quote }}
+            - {{ .Values.controller.rbacConfigMapNamespace | quote }}
             - "-default-policy"
             - {{ .Values.controller.defaultPolicy | quote }}
           ports:

@@ -2,13 +2,15 @@
 # This is a YAML-formatted file.
 
 controller:
-  rbacConfigMapName: "argocd-rbac-cm"
+  rbacConfigMapName: argocd-rbac-cm
+  rbacConfigMapNamespace: argocd
   defaultPolicy: "role:readonly"
 
 replicaCount: 1
 
 image:
-  repository: ghcr.io/codemug/argocd-rbac-controller
+  registry: ghcr.io/codemug
+  imageName: argocd-rbac-controller
   pullPolicy: IfNotPresent
   tag: "0.1.0"
 
