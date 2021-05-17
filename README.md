@@ -12,14 +12,14 @@ Use the [helm chart](https://github.com/codemug/argocd-rbac-controller/tree/main
 helm install argocd-rbac-controller helm/argocd-rbac-controller
 ```
 
-**Note**: I'm using the very bandwidth-limited free plan on GitHub packages which is why you might not be able to pull my build of the image. You would have to build the image yourself in this case and push it to your own registry. To do so, update the `REGISTRY` value in the `Makefile` and do a:
+**Note**: If you intend to build the image yourself and push it to your own registry, you can update the `REGISTRY` value in the `Makefile` and do a:
 
 ```shell
 make docker-build
 make docker-push
 ```
 
-And then, when deploying the helm chart, set the image name as follows:
+And then, when deploying the helm chart, you can set the image name as follows:
 
 ```shell
 helm install argocd-rbac-controller helm/argocd-rbac-controller --set image.registry=name-of-your-registry
